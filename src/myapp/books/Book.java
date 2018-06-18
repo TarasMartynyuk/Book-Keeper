@@ -21,7 +21,7 @@ public class Book {
     }
 
     public BasicDBObject toDBObject() {
-        BasicDBObject document = new BasicDBObject();
+        var document = new BasicDBObject();
 
         document.put("name", name);
         document.put("year", year);
@@ -32,7 +32,7 @@ public class Book {
     }
 
     public static Book fromDBObject(DBObject document) {
-        Book b = new Book();
+        var b = new Book();
 
         b.name = (String) document.get("name");
         b.year = (Integer) document.get("year");

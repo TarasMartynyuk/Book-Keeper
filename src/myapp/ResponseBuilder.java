@@ -23,6 +23,14 @@ public class ResponseBuilder {
         _out.flush();
     }
 
+    public void writeError(String errorMessage) {
+        writeOkHeader();
+        writeContentHeaders(errorMessage.length(), "text/plain");
+        _out.write(errorMessage);
+        writeConnectionClosed();
+        _out.flush();
+    }
+
     private void writeOkHeader() {
         _out.write("HTTP/1.1 200 OK\r\n");
     }

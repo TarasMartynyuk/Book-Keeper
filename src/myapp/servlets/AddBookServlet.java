@@ -1,9 +1,12 @@
 package myapp.servlets;
 
+import http.server.Method;
 import http.server.request.Request;
 import http.server.response.Response;
 import http.server.servlet.AbstractServlet;
+import myapp.ResponseBuilder;
 import myapp.books.Book;
+import myapp.books.BooksContainer;
 import myapp.books.DatabaseController;
 
 import java.io.IOException;
@@ -12,10 +15,20 @@ public class AddBookServlet extends AbstractServlet {
 
     public void service(Request req, Response res) throws IOException, MissingParameterException {
 
-        var b = DatabaseController.getInstance();
+        if(req.getMethod() != Method.POST) {
+            throw new IllegalArgumentException("AddBookServlet got a request with method: " + req.getMethod() +
+                    "the method must be Post");
+        }
 
-        Book book = parseBookFromBody(req);
+        try {
+            var book = parseBookFromBody(req);
+            BooksContainer.getInstance().addBook(book);
 
+
+        } catch (NumberFormatException ne) {
+            var wrapper = new ResponseBuilder(res);
+            wrapper.writeError(ne.toString());
+        }
     }
 
     private Book parseBookFromBody(Request req) {
