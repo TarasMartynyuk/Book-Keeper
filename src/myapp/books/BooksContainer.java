@@ -1,5 +1,8 @@
 package myapp.books;
 
+import com.mongodb.MongoClient;
+
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -19,8 +22,11 @@ public class BooksContainer {
         _books = new ArrayList<>();
     }
 
-    public synchronized void addBook(Book book) {
+    public synchronized void addBook(Book book) throws UnknownHostException {
         _books.add(book);
+        BooksCollectionWrapper.getInstance().insert(book.toDBObject());
+
+        BooksCollectionWrapper.getInstance().printColl();
     }
 
     public synchronized Iterable<Book> getBooks() {
