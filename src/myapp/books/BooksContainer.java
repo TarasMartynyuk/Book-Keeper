@@ -19,7 +19,7 @@ public class BooksContainer {
     private final ArrayList<Book> _books;
 
     private BooksContainer() {
-        _books = new ArrayList<>();
+        _books = BooksCollectionWrapper.getInstance().getAllBooks();
     }
 
     public synchronized void addBook(Book book) throws UnknownHostException {

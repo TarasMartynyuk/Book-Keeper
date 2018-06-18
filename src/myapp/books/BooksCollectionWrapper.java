@@ -2,7 +2,9 @@ package myapp.books;
 
 import com.mongodb.*;
 
+import java.lang.reflect.Array;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class BooksCollectionWrapper {
 
@@ -22,8 +24,8 @@ public class BooksCollectionWrapper {
 
     private static BooksCollectionWrapper _instance;
 
-    final MongoClient _client;
-    final DBCollection _booksColl;
+    private final MongoClient _client;
+    private final DBCollection _booksColl;
 
     private BooksCollectionWrapper() throws UnknownHostException {
         _client = new MongoClient();
@@ -36,7 +38,18 @@ public class BooksCollectionWrapper {
         _booksColl.insert(dbObject);
     }
 
+    public ArrayList<Book> getAllBooks() {
+        var cursor = _booksColl.find();
 
+        var books = new ArrayList<Book>(cursor.count());
+        System.out.println(books.size());
+
+        while (cursor.hasNext()) {
+            var dbObject = cursor.next();
+            books.add(Book.fromDBObject(dbObject));
+        }
+        return books;
+    }
 
     public void printColl() {
         var cursor = _booksColl.find();
