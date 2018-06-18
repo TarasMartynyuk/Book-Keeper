@@ -4,14 +4,20 @@
     </head>
     <body>
         <br>
-        Welcome to Web notes app!
-        <p><form action="servlet/notes.add" method="post">
-                Add note: <input type="text" name="note"><br>
-                <input type="submit" value="Submit">
+        Welcome to Book Keeper app!
+        <p><form action="servlet/books.add" method="post">
+                Add Book:<br>
+
+                name:       <input type="text" name="name"><br>
+                author:     <input type="text" name="author"><br>
+                language:   <input type="text" name="language"><br>
+                year:       <input type="text" name="year"><br>
+
+            <input type="submit" value="Submit">
             </form>
         </p>
 
 
-        <a href="/servlet/notes.list">list my notes</a>
+        <a href="/servlet/notes.list">list my books</a>
     </body>
 </html>

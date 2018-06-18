@@ -51,7 +51,6 @@ public class HttpRequestReaderTests {
 
     public static void writeAll(InputStream in) throws IOException {
         var twoBytes = new byte[2];
-        int inLine = 0;
         while (true) {
 
             if(in.read(twoBytes, 0, twoBytes.length) == -1) {
@@ -60,11 +59,6 @@ public class HttpRequestReaderTests {
             }
 
             System.out.print(new String(twoBytes, "UTF-8"));
-//            inLine += 2;
-//            if(inLine >= 80) {
-//                System.out.print("\n");
-//                inLine = 0;
-//            }
         }
     }
 }

@@ -21,10 +21,4 @@ public class DatabaseController {
         _mongoClient = new MongoClient();
         System.out.println(_mongoClient.getDatabaseNames());
     }
-
-
-
-
-
-
 }
