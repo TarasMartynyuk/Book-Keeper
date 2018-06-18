@@ -16,8 +16,8 @@ public class ServletProcessor implements Processor {
     @Override
     public void process(Request request, Response response) {
 
-        String servletName = getServletName(request);        
-        Servlet servlet = servletsMap.getServlet(servletName);        
+        var servletName = getServletName(request);
+        var servlet = servletsMap.getServlet(servletName);
         if (servlet == null) {
             return;
         }
@@ -30,11 +30,11 @@ public class ServletProcessor implements Processor {
     }
 
     private String getServletName(Request request) {
-        String uri = request.getURI();
-        int start = uri.lastIndexOf("/");
-        int end = uri.lastIndexOf("?");
+        var uri = request.getURI();
+        var start = uri.lastIndexOf("/");
+        var end = uri.lastIndexOf("?");
         end = (end < 0) ? uri.length() : end;
-        String servletName = uri.substring(start, end);
+        var servletName = uri.substring(start, end);
         return servletName;
     }
 }

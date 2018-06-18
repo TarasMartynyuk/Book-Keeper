@@ -24,10 +24,9 @@ public class AddBookServlet extends AbstractServlet {
             var book = parseBookFromBody(req);
             BooksContainer.getInstance().addBook(book);
 
-
         } catch (NumberFormatException ne) {
-            var wrapper = new ResponseBuilder(res);
-            wrapper.writeError(ne.toString());
+            var resBuilder = new ResponseBuilder(res);
+            resBuilder.writeError(ne.toString());
         }
     }
 
