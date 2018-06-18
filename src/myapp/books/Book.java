@@ -10,6 +10,22 @@ public class Book {
     private String language;
     private int year;
 
+    public String getName() {
+        return name;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
     public Book(String name, String author, String language, int year) {
         this.name = name;
         this.author = author;

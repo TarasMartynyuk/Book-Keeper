@@ -26,9 +26,6 @@ public class BooksContainer {
     public synchronized Iterable<Book> getBooks() {
         // it is a shallow copy, so if we modify the books,
         // so we don't synchronize for the case when the books themselves are edited
-        var copy = new ArrayList<Book>(_books.size());
-
-        Collections.copy(copy, _books);
-        return copy;
+        return new ArrayList<>(_books);
     }
 }

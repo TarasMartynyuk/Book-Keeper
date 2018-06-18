@@ -20,16 +20,20 @@ public class BookListPageBuilder {
 
         for(var book : books) {
             builder.append(buildBookListParagraph(book));
+            builder.append("<br><br>");
         }
 
         builder.append(readFileAsUtf8(Paths.get(Constants.WEB_ROOT, FOOTER_FILENAME)));
 
-//        return builder.toString();
-        return "Hello";
+        return builder.toString();
     }
 
     private String buildBookListParagraph(Book book) {
-        return null;
+
+        return "<p>" + "name:       " + book.getName() + "<br>\n" +
+                "author:            " + book.getAuthor() + "<br>\n" +
+                "language:          " + book.getLanguage() + "<br>\n" +
+                "year:              " + book.getYear() + "<br>";
     }
 
     private String readFileAsUtf8(Path path) throws IOException {
