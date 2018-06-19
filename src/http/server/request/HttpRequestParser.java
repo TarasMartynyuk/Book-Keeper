@@ -1,92 +1,146 @@
 package http.server.request;
 import http.server.Method;
 
-import java.util.HashMap;
+import java.io.*;
 import java.util.Map;
 
-// TODO: parsed everything in one run
+/**
+ * assumes it is the only one reading from InputStream
+ */
 public class HttpRequestParser {
 
-    public String parseUri(String headersString) {
+    //region getters
 
-        if (headersString.isEmpty()) {
-            return "";
-        }
-
-        int index1 = headersString.indexOf(' ');
-        if (index1 != -1) {
-            int index2 = headersString.indexOf(' ', index1 + 1);
-            if (index2 > index1) {
-                return headersString.substring(index1 + 1, index2);
-            }
-        }
-
-        return "";
+    public String getUri() {
+        return _uri;
     }
 
-    public Method parseMethod(String headers) {
+    public Method getMethod() {
+        return _method;
+    }
 
-        int methodEndIndex = headers.indexOf(' ');
+    public String getCookie() {
+        return _cookie;
+    }
 
-        if(methodEndIndex < 0) {
-            throw new IllegalArgumentException("headers does not contain a single space");
+    public String getHeaderString() {
+        return _headerString;
+    }
+
+    public int getContentLength() {
+        return _contentLength;
+    }
+
+    public Map<String, String> getBodyParams() { return _bodyParams; }
+
+    public String getBodyString() { return _bodyString; }
+    //endregion
+
+    private String _uri;
+    private Method _method;
+    private int _contentLength;
+    private String _cookie;
+    private Map<String, String> _bodyParams;
+
+    private String _headerString;
+    private String _bodyString;
+
+    private final BufferedReader _bufferedIn;
+    private final HttpRequestParserHelper _parserHelper;
+
+    public HttpRequestParser(InputStream in) {
+        _bufferedIn = new BufferedReader(new InputStreamReader(in));
+        _parserHelper = new HttpRequestParserHelper();
+    }
+
+    // should be parsed as a map, but i don't need it now
+    /**
+     * reads the http request's headers into a string
+     * stops at the blank line after headers
+     *
+     * the stream is advanced, so that it now points
+     * to the start of next line after the blank line
+     */
+    public void readAndParseHeaders() throws IOException {
+        // not closing any stream that uses socket input stream here
+        var fullRequest = new StringBuilder();
+
+        var firstLine = _bufferedIn.readLine();
+        fullRequest.append(firstLine);
+
+        if(firstLine == null || firstLine.isEmpty()) {
+            throw new IllegalStateException("the input contains no lines");
+        }
+        parseFirstLine(firstLine);
+
+        String line;
+        while (true) {
+            line = _bufferedIn.readLine();
+
+            if (line == null || line.isEmpty()) {
+                break;
+            }
+
+            fullRequest.append(line);
+            fullRequest.append("\r\n");
         }
 
-        var methodString = headers.substring(0, methodEndIndex).toUpperCase();
+        assert fullRequest.toString().contains("HTTP");
 
-        switch (methodString) {
-            case "GET":
-                return Method.GET;
-            case "POST":
-                return Method.POST;
-            default: return null;
+        _headerString =  fullRequest.toString();
+        _contentLength = _parserHelper.parseContentLengthFromHeaders(_headerString);
+        if(_contentLength < 0) {
+            throw new IllegalArgumentException("contentLength must be >= 0");
+        }
+    }
+
+    private void parseFirstLine(String firstLine) {
+        _uri = _parserHelper.parseUri(firstLine);
+        _method = _parserHelper.parseMethod(firstLine);
+        if(_method == null) {
+            throw new IllegalArgumentException("invalid HTTP header - missing method");
         }
     }
 
     /**
-     * @return 0 if no content length header provided, else header value
+     * the headers must be read from InputStream _in before reading body
+     * reads all remaining characters from inputstream
+     *
+     * interprets bytes as UTF-8 encoded
      */
-    public int parseContentLengthFromHeaders(String headers) {
-        int headerStartIndex = headers.indexOf("Content-Length");
+    public void readAndParseBody() throws IOException {
 
-        if(headerStartIndex < 0) {
-            return 0;
+        if(_headerString == null) {
+            throw new IllegalStateException("you must parse headers first");
         }
-        int offset = 16; // length of haeder name string + 2 for : and space
-
-        int headerEndIndex =  headers.indexOf("\r\n", headerStartIndex);
-
-        assert  headerEndIndex > 0;
-
-        var valueStr = headers.substring(headerStartIndex + offset, headerEndIndex);
-
-        assert Integer.parseInt(valueStr) >= 0;
-        return Integer.parseInt(valueStr);
-    }
-
-    public Map<String, String> parseBody(String bodyString) {
-        // quick way
-        var paramPairStrings = bodyString.split("&");
-        var body = new HashMap<String, String >();
-
-        for (var pair : paramPairStrings) {
-            var keyValueStrings = pair.split("=");
-
-            if(keyValueStrings.length == 1) {
-                throw new IllegalArgumentException("every key in body must have a matching value, separated by =");
-            }
-
-            assert keyValueStrings.length == 2;
-            if(keyValueStrings[0].isEmpty()) {
-                throw new IllegalArgumentException("empty key fo value: " + keyValueStrings[1]);
-            }
-            if(keyValueStrings[1].isEmpty()) {
-                throw new IllegalArgumentException("empty value fo key: " + keyValueStrings[0]);
-            }
-
-            body.put(keyValueStrings[0], keyValueStrings[1]);
+        if(_contentLength <= 0 ) {
+            throw new IllegalStateException("cannot parse body for content length which is <= 0");
         }
 
-        return body;
+        var chars = new char[_contentLength];
+        _bufferedIn.read(chars, 0, chars.length);
+
+        _bodyString = new String(chars);
+        _bodyParams = _parserHelper.parseBody(_bodyString);
     }
+
+    public void writeAll(InputStream in) throws IOException {
+        var twoBytes = new byte[2];
+        int inLine = 0;
+        while (true) {
+
+            if(in.read(twoBytes, 0, twoBytes.length) == -1) {
+                System.out.println("EOF!");
+                break;
+            }
+
+            System.out.print(new String(twoBytes, "UTF-8"));
+        }
+    }
+
+    private boolean isCarriageReturn(byte[] bytes) {
+        return bytes[0] == '\r' &&
+                bytes[1] == '\n';
+    }
+
 }

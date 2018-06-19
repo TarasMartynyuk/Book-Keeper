@@ -5,62 +5,60 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
+import java.io.*;
 
 public class HttpRequestParserTests {
-    //region body mocks
 
-    static final String key1 = "key1";
-    static final String value1 = "value1";
-    static final String key2 = "key2";
-    static final String value2 = "value2";
+    static final String CONTENT = "note=LONGONELONGONELONGONELONGOE";
+    static final int CONTENT_LENGTH = CONTENT.length();
+    static final String HEADER_END = "HEADER_END";
 
-    static final String VALID_BODY_SINGLE_PARAM = key1 + "=" + value1;
-    static final String VALID_BODY_MULTIPLE_PARAMS = VALID_BODY_SINGLE_PARAM +
-            "&" + key2 + "=" + value2;
-    static final String NO_EQUALS_BODY = key1 + value1;
-
-    static final String EMPTY_KEY_BODY = VALID_BODY_SINGLE_PARAM + "&=" + value1;
-    static final String EMPTY_VALUE_BODY = VALID_BODY_SINGLE_PARAM + "&" + key1 + "=";
-    //endregion
+    static final String POST_STRING =
+            "POST /servlet/hello HTTP/1.1\r\n" +
+            "Host: localhost:8888\r\n" +
+            "Content-Length: " + CONTENT_LENGTH + "\r\n" +
+            "Connection: keep-alive" + HEADER_END + "\r\n" +
+            "\r\n" +
+            CONTENT;
 
     HttpRequestParser _testInstance;
 
     @Before
     public void setup() throws IOException {
-        _testInstance = new HttpRequestParser();
+        _testInstance = new HttpRequestParser(createPostRequestStream());
     }
 
     @Test
-    public void ParseBody_IfSingleParameter_ReturnMapHasSingleEntry() {
-        var body = _testInstance.parseBody(VALID_BODY_SINGLE_PARAM);
+    public void POST_ReadHeaders_ReturnsString_EndingWithLastHeader() throws IOException {
 
-        Assert.assertEquals(body.get(key1), value1);
-        Assert.assertEquals(body.keySet().size(), 1);
+        _testInstance.readAndParseHeaders();
+        Assert.assertTrue(_testInstance.getHeaderString().contains(HEADER_END));
     }
 
     @Test
-    public void ParseBody_ReturnMap_HasEntryForEachParameter() {
-        var body = _testInstance.parseBody(VALID_BODY_MULTIPLE_PARAMS);
+    public void POST_ReadBody_ReturnsContent() throws IOException {
 
-        Assert.assertEquals(body.get(key1), value1);
-        Assert.assertEquals(body.get(key2), value2);
-        Assert.assertEquals(body.keySet().size(), 2);
+        _testInstance.readAndParseHeaders();
+        _testInstance.readAndParseBody();
+        var body = _testInstance.getBodyString();
+
+        Assert.assertEquals(body, CONTENT);
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void ParseBody_ThrowsIllegalArgument_IfNoEqualsEncountered() {
-
-        _testInstance.parseBody(NO_EQUALS_BODY);
+    InputStream createPostRequestStream() {
+        return new ByteArrayInputStream(POST_STRING.getBytes());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void ParseBody_ThrowsInvalidArgument_IfKeyIsEmpty() {
-        _testInstance.parseBody(EMPTY_KEY_BODY);
-    }
+    public static void writeAll(InputStream in) throws IOException {
+        var twoBytes = new byte[2];
+        while (true) {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void ParseBody_ThrowsInvalidArgument_IfValueIsEmpty() {
-        _testInstance.parseBody(EMPTY_VALUE_BODY);
+            if(in.read(twoBytes, 0, twoBytes.length) == -1) {
+                System.out.println("EOF!");
+                break;
+            }
+
+            System.out.print(new String(twoBytes, "UTF-8"));
+        }
     }
 }

@@ -9,42 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class HttpRequest implements Request {
-
-    private final String _headers;
-    private final String _body;
-    private final String _uri;
-    private final Map<String, String> _bodyParams;
-
-    private final Method _method;
-
-    public HttpRequest(InputStream input) throws IOException {
-        var parser = new HttpRequestParser();
-        var reader = new HttpRequestReader(input);
-
-        _headers = reader.readHeaders();
-        if(_headers.isEmpty()) {
-            throw new IllegalArgumentException("stream contains empty headers - the first line is empty");
-        }
-
-        _uri = parser.parseUri(_headers);
-        _method = parser.parseMethod(_headers);
-        if(_method == null) {
-            throw new IllegalArgumentException("invalid HTTP header - missing method");
-        }
-
-        int contentLength = parser.parseContentLengthFromHeaders(_headers);
-
-        if(contentLength > 0) {
-            _body = reader.readBody(contentLength);
-            _bodyParams = parser.parseBody(_body);
-        } else {
-            _body = null;
-            _bodyParams = null;
-        }
-    }
-
     //region getters
-
     @Override
     public String getURI() {
         return _uri;
@@ -76,4 +41,35 @@ public class HttpRequest implements Request {
     public String getRequestAsText() {
         return _headers + "\n" + _body;
     }//endregion
+
+    private String _headers;
+    private final String _body;
+    private String _uri;
+    private final Map<String, String> _bodyParams;
+
+    private Method _method;
+    private int _contentLength;
+
+    public HttpRequest(InputStream input) throws IOException {
+        var parser = new HttpRequestParser(input);
+
+        parser.readAndParseHeaders();
+        initHeaderFields(parser);
+
+        if(_contentLength > 0) {
+            parser.readAndParseBody();
+            _body = parser.getBodyString();
+            _bodyParams = parser.getBodyParams();
+        } else {
+            _body = null;
+            _bodyParams = null;
+        }
+    }
+
+    private void initHeaderFields(HttpRequestParser parser) {
+        _uri = parser.getUri();
+        _method = parser.getMethod();
+        _contentLength = parser.getContentLength();
+        _headers = parser.getHeaderString();
+    }
 }

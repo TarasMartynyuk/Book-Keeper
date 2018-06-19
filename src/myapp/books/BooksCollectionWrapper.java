@@ -26,7 +26,6 @@ public class BooksCollectionWrapper {
     private static final String USERNAME = "only_user";
     private static final String PASSWORD = "1111";
 
-
     private static BooksCollectionWrapper _instance;
 
     private final MongoClient _client;
