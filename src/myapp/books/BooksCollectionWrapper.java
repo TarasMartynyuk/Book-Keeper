@@ -5,6 +5,7 @@ import com.mongodb.*;
 import java.lang.reflect.Array;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BooksCollectionWrapper {
 
@@ -22,14 +23,21 @@ public class BooksCollectionWrapper {
     private static final String BOOKS_DB_NAME = "Books";
     private static final String BOOKS_COLL_NAME = "books";
 
+    private static final String USERNAME = "only_user";
+    private static final String PASSWORD = "1111";
+
+
     private static BooksCollectionWrapper _instance;
 
     private final MongoClient _client;
     private final DBCollection _booksColl;
 
     private BooksCollectionWrapper() throws UnknownHostException {
-        _client = new MongoClient();
-        System.out.println("existing dbs: " + _client.getDatabaseNames());
+
+        var credential = MongoCredential.createCredential(USERNAME, BOOKS_DB_NAME, PASSWORD.toCharArray());
+        _client = new MongoClient(new ServerAddress("localhost", 27017), Arrays.asList(credential));
+
+
         var booksDb = _client.getDB(BOOKS_DB_NAME);
         _booksColl = booksDb.getCollection(BOOKS_COLL_NAME);
     }

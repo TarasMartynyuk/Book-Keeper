@@ -6,7 +6,7 @@
 package myapp;
 
 import http.server.HttpServer;
-import http.server.servlet.AbstractServletsMap;
+import myapp.books.*;
 import myapp.servlets.ServletsMap;
 
 import java.io.IOException;
@@ -18,8 +18,8 @@ import java.io.IOException;
 public class RunServer {
      public static void main(String[] args) throws IOException {
         try {
-            AbstractServletsMap servletsMap = new ServletsMap();
-            HttpServer server = new HttpServer(servletsMap);
+            var servletsMap = new ServletsMap();
+            var server = new HttpServer(servletsMap);
             server.await();
 
         } catch (Exception e) {
