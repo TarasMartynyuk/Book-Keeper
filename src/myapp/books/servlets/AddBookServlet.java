@@ -4,7 +4,7 @@ import http.server.Method;
 import http.server.request.Request;
 import http.server.response.Response;
 import http.server.servlet.AbstractServlet;
-import myapp.ResponseBuilder;
+import myapp.servlets.ResponseBuilder;
 import myapp.books.Book;
 import myapp.books.BooksContainer;
 import myapp.servlets.MissingParameterException;
@@ -19,7 +19,6 @@ public class AddBookServlet extends AbstractServlet {
             throw new IllegalArgumentException("AddBookServlet got a request with method: " + req.getMethod() +
                     "the method must be Post");
         }
-
         try {
             var book = parseBookFromBody(req);
             BooksContainer.getInstance().addBook(book);

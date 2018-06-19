@@ -1,6 +1,7 @@
 package myapp.servlets;
 
 import http.server.servlet.AbstractServletsMap;
+import myapp.accounts.servlets.LoginServlet;
 import myapp.books.servlets.AddBookServlet;
 import myapp.books.servlets.ListBooksServlet;
 
@@ -13,6 +14,6 @@ public class ServletsMap extends AbstractServletsMap {
     public ServletsMap() {
         servlets.put("/books.add", new AddBookServlet());
         servlets.put("/books.list", new ListBooksServlet());
+        servlets.put("/login", new LoginServlet());
     }
-
 }

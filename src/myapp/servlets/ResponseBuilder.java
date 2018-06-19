@@ -1,4 +1,4 @@
-package myapp;
+package myapp.servlets;
 import http.server.response.Response;
 
 import java.io.IOException;

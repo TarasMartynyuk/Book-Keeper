@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public class StaticResourceProcessor implements Processor {
 
-    private static final String WELCOME_PAGE = "index.html";
+    private static final String WELCOME_PAGE = "login.html";
     
     @Override
     public void process(Request request, Response response) {

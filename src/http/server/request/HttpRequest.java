@@ -15,6 +15,7 @@ public class HttpRequest implements Request {
         return _uri;
     }
 
+    @Override
     public Method getMethod() { return _method; }
 
     @Override
@@ -26,7 +27,6 @@ public class HttpRequest implements Request {
         return _bodyParams.getOrDefault(name, null);
     }
 
-
     @Override
     public Set<String> getParameterNames() {
         return _bodyParams.keySet();
@@ -35,6 +35,10 @@ public class HttpRequest implements Request {
     @Override
     public Collection<String> getParameterValues() {
         return _bodyParams.values();
+    }
+
+    public String getCookie() {
+        return _cookie;
     }
 
     @Override

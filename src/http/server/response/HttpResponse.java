@@ -1,7 +1,7 @@
 package http.server.response;
 
 import http.server.Constants;
-import myapp.ResponseBuilder;
+import myapp.servlets.ResponseBuilder;
 
 import java.io.OutputStream;
 import java.io.IOException;
@@ -34,13 +34,12 @@ public class HttpResponse implements Response {
             int ch = fis.read(bytes, 0, BUFFER_SIZE);
 
             while (ch != -1) {
-//                output.write(bytes, 0, ch);
                 builder.append(new String(bytes, "UTF-8"));
                 ch = fis.read(bytes, 0, BUFFER_SIZE);
             }
 
-            var responce = builder.toString();
-            new ResponseBuilder(this).writeOkResponce(responce, getContentTypeFromFilename(resourceURI));
+            var response = builder.toString();
+            new ResponseBuilder(this).writeOkResponce(response, getContentTypeFromFilename(resourceURI));
 
         } catch (FileNotFoundException e) {
             String errorMessage = "HTTP/1.1 404 File Not Found\r\n"

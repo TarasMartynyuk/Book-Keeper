@@ -2,7 +2,7 @@ package myapp.books.servlets;
 import http.server.request.Request;
 import http.server.response.Response;
 import http.server.servlet.AbstractServlet;
-import myapp.ResponseBuilder;
+import myapp.servlets.ResponseBuilder;
 import myapp.books.BooksContainer;
 import myapp.servlets.MissingParameterException;
 
