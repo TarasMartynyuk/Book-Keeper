@@ -1,6 +1,8 @@
 package myapp.servlets;
 
 import http.server.servlet.AbstractServletsMap;
+import myapp.books.servlets.AddBookServlet;
+import myapp.books.servlets.ListBooksServlet;
 
 /**
  *

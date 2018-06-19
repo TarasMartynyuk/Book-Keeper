@@ -1,4 +1,4 @@
-package myapp.servlets;
+package myapp.books.servlets;
 
 import http.server.Method;
 import http.server.request.Request;
@@ -7,6 +7,7 @@ import http.server.servlet.AbstractServlet;
 import myapp.ResponseBuilder;
 import myapp.books.Book;
 import myapp.books.BooksContainer;
+import myapp.servlets.MissingParameterException;
 
 import java.io.IOException;
 

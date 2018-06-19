@@ -1,4 +1,4 @@
-package myapp.servlets;
+package myapp.books.servlets;
 
 import http.server.Constants;
 import myapp.books.Book;
