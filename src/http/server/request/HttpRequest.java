@@ -45,6 +45,7 @@ public class HttpRequest implements Request {
     private String _headers;
     private final String _body;
     private String _uri;
+    private String _cookie;
     private final Map<String, String> _bodyParams;
 
     private Method _method;
@@ -70,6 +71,8 @@ public class HttpRequest implements Request {
         _uri = parser.getUri();
         _method = parser.getMethod();
         _contentLength = parser.getContentLength();
+        _cookie = parser.getCookie();
+
         _headers = parser.getHeaderString();
     }
 }
