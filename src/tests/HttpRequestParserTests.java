@@ -20,7 +20,7 @@ public class HttpRequestParserTests {
             "Host: localhost:8888\r\n" +
             "Content-Length: " + CONTENT_LENGTH + "\r\n" +
             "Connection: keep-alive" + HEADER_END + "\r\n" +
-            "Cookie: " + COOKIE +
+            "Cookie: " + COOKIE + "\r\n" +
             "\r\n" +
             CONTENT;
 

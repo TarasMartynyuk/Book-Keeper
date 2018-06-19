@@ -74,28 +74,30 @@ public class HttpHeaderLinesParserTests {
     }
     //endregion
 
-
+    //region cookie
     @Test
     public void IsCookie_ReturnsTrueForCookieHeader() {
-        Assert.assertTrue(_testInstance.isCookiesString(VALID_COOKIE_HEADER));
+        Assert.assertTrue(_testInstance.isCookiesHeader(VALID_COOKIE_HEADER));
     }
 
     @Test
     public void IsCookie_ReturnsFalse_ForNonCookieHeader() {
-        Assert.assertFalse(_testInstance.isCookiesString(NOT_COOKIE_HEADER));
+        Assert.assertFalse(_testInstance.isCookiesHeader(NOT_COOKIE_HEADER));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void IsCookie_Throws_IfNoSemicolonAndWhitespace() {
-        _testInstance.isCookiesString(INVALID_HEADER);
+        _testInstance.isCookiesHeader(INVALID_HEADER);
     }
 
     @Test
     public void ParseHeaderValue_ReturnsHeaderValue_IfValidHeader() {
-//        Assert.assertEquals(-_testInstance.parse);
+        Assert.assertEquals(HEADER_VALUE, _testInstance.parseHeaderValue(VALID_HEADER));
     }
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void ParseHeaderValue_Throws_IfNoSemicolonAndWhitespace() {
+        _testInstance.parseHeaderValue(INVALID_HEADER);
     }
+    //endregion
 }

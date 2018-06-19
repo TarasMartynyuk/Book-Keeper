@@ -81,6 +81,10 @@ public class HttpRequestParser {
                 break;
             }
 
+            if(_parserHelper.isCookiesHeader(line)) {
+                _cookie = _parserHelper.parseHeaderValue(line);
+            }
+
             fullRequest.append(line);
             fullRequest.append("\r\n");
         }

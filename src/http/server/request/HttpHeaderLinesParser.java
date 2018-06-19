@@ -50,7 +50,7 @@ public class HttpHeaderLinesParser {
         }
     }
 
-    public boolean isCookiesString(String headerLine) {
+    public boolean isCookiesHeader(String headerLine) {
         var headerName = parseHeaderName(headerLine);
 
         if(headerName == null) {
@@ -60,9 +60,16 @@ public class HttpHeaderLinesParser {
         return headerName.equals(COOKIE_HEADER_NAME);
     }
 
-//    public String getHeaderValue(String headerString) {
-//
-//    }
+    public String parseHeaderValue(String headerLine) {
+        int separatorIndex = headerLine.indexOf(": ");
+        int valueStartIndex = separatorIndex + 2;
+
+        if(separatorIndex <= 0 || valueStartIndex >= headerLine.length()) {
+            throw new IllegalArgumentException("invalid header line");
+        }
+
+        return headerLine.substring(separatorIndex + 2, headerLine.length());
+    }
 
     /**
      * @return 0 if no content length header provided, else header value
