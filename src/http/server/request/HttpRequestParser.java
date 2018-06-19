@@ -2,6 +2,9 @@ package http.server.request;
 import http.server.Method;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,8 +22,8 @@ public class HttpRequestParser {
         return _method;
     }
 
-    public String getCookie() {
-        return _cookie;
+    public List<String> getCookies() {
+        return _cookies;
     }
 
     public String getHeaderString() {
@@ -39,7 +42,7 @@ public class HttpRequestParser {
     private String _uri;
     private Method _method;
     private int _contentLength;
-    private String _cookie;
+    private ArrayList<String> _cookies;
     private Map<String, String> _bodyParams;
 
     private String _headerString;
@@ -82,7 +85,7 @@ public class HttpRequestParser {
             }
 
             if(_parserHelper.isCookiesHeader(line)) {
-                _cookie = _parserHelper.parseHeaderValue(line);
+                _cookies = parseCookies(_parserHelper.parseHeaderValue(line));
             }
 
             fullRequest.append(line);
@@ -128,23 +131,7 @@ public class HttpRequestParser {
         _bodyParams = _parserHelper.parseBody(_bodyString);
     }
 
-    public void writeAll(InputStream in) throws IOException {
-        var twoBytes = new byte[2];
-        int inLine = 0;
-        while (true) {
-
-            if(in.read(twoBytes, 0, twoBytes.length) == -1) {
-                System.out.println("EOF!");
-                break;
-            }
-
-            System.out.print(new String(twoBytes, "UTF-8"));
-        }
+    private ArrayList<String> parseCookies(String cookiesValue) {
+        return new ArrayList<>(Arrays.asList(cookiesValue.split("; ")));
     }
-
-    private boolean isCarriageReturn(byte[] bytes) {
-        return bytes[0] == '\r' &&
-                bytes[1] == '\n';
-    }
-
 }

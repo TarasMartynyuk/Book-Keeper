@@ -5,6 +5,7 @@ import http.server.Method;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,8 +38,8 @@ public class HttpRequest implements Request {
         return _bodyParams.values();
     }
 
-    public String getCookie() {
-        return _cookie;
+    public List<String> getCookies() {
+        return _cookies;
     }
 
     @Override
@@ -49,7 +50,7 @@ public class HttpRequest implements Request {
     private String _headers;
     private final String _body;
     private String _uri;
-    private String _cookie;
+    private List<String> _cookies;
     private final Map<String, String> _bodyParams;
 
     private Method _method;
@@ -75,7 +76,7 @@ public class HttpRequest implements Request {
         _uri = parser.getUri();
         _method = parser.getMethod();
         _contentLength = parser.getContentLength();
-        _cookie = parser.getCookie();
+        _cookies = parser.getCookies();
 
         _headers = parser.getHeaderString();
     }

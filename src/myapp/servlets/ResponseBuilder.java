@@ -15,9 +15,21 @@ public class ResponseBuilder {
         _out = writer;
     }
 
-    public void writeOkResponce(String response, String contentType) {
+    public void writeOkResponse(String response, String contentType) {
+        writeOkResponse(response, contentType, null);
+    }
+
+    public void writeOkResponse(String response, String contentType, Iterable<String> headers) {
         writeOkHeader();
         writeContentHeaders(response.length(), contentType);
+
+        if(headers != null) {
+            for(var header : headers) {
+                _out.write(header + "\r\n");
+            }
+        }
+        _out.write("\r\n");
+
         _out.write(response);
         writeConnectionClosed();
         _out.flush();
@@ -37,7 +49,7 @@ public class ResponseBuilder {
 
     private void writeContentHeaders(int contentLength, String contentType) {
         _out.write("Content-Length: " + contentLength + "\r\n");
-        _out.write("Content-Type: " + contentType + "\r\n\r\n");
+        _out.write("Content-Type: " + contentType + "\r\n");
     }
 
     private void writeConnectionClosed() {

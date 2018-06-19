@@ -2,6 +2,7 @@ package myapp.books.servlets;
 
 import http.server.Constants;
 import myapp.books.Book;
+import myapp.servlets.WebRootPageReader;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,14 +17,14 @@ public class BookListPageBuilder {
     public String buildBookListPage(Iterable<Book> books) throws IOException {
         var builder = new StringBuilder();
 
-        builder.append(readFileAsUtf8(Paths.get(Constants.WEB_ROOT, HEADER_FILENAME)));
+        builder.append(WebRootPageReader.getPage(HEADER_FILENAME));
 
         for(var book : books) {
             builder.append(buildBookListParagraph(book));
             builder.append("<br><br>");
         }
 
-        builder.append(readFileAsUtf8(Paths.get(Constants.WEB_ROOT, FOOTER_FILENAME)));
+        builder.append(WebRootPageReader.getPage(FOOTER_FILENAME));
 
         return builder.toString();
     }
@@ -34,10 +35,5 @@ public class BookListPageBuilder {
                 "author:            " + book.getAuthor() + "<br>\n" +
                 "language:          " + book.getLanguage() + "<br>\n" +
                 "year:              " + book.getYear() + "<br>";
-    }
-
-    private String readFileAsUtf8(Path path) throws IOException {
-        var contents = Files.readAllBytes(path);
-        return new String(contents, "UTF-8");
     }
 }

@@ -39,7 +39,7 @@ public class HttpResponse implements Response {
             }
 
             var response = builder.toString();
-            new ResponseBuilder(this).writeOkResponce(response, getContentTypeFromFilename(resourceURI));
+            new ResponseBuilder(this).writeOkResponse(response, getContentTypeFromFilename(resourceURI));
 
         } catch (FileNotFoundException e) {
             String errorMessage = "HTTP/1.1 404 File Not Found\r\n"

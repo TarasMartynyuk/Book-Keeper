@@ -16,6 +16,6 @@ public class ListBooksServlet extends AbstractServlet {
         var resBuilder = new ResponseBuilder(res);
 
         var books = BooksContainer.getInstance().getBooks();
-        resBuilder.writeOkResponce(htmlBuilder.buildBookListPage(books), "text/html");
+        resBuilder.writeOkResponse(htmlBuilder.buildBookListPage(books), "text/html");
     }
 }

@@ -2,6 +2,7 @@ package http.server.request;
 import http.server.Method;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 // TODO: parsed everything in one run

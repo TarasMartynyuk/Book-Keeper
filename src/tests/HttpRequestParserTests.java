@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class HttpRequestParserTests {
 
@@ -51,7 +50,7 @@ public class HttpRequestParserTests {
     @Test
     public void GetCookie_ReturnsValueOfCookieHeader() throws IOException {
         _testInstance.readAndParseHeaders();
-        Assert.assertEquals(_testInstance.getCookie(), COOKIE);
+        Assert.assertEquals(_testInstance.getCookies(), COOKIE);
     }
 
     InputStream createPostRequestStream() {
