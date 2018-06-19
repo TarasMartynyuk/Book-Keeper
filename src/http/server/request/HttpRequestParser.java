@@ -46,11 +46,11 @@ public class HttpRequestParser {
     private String _bodyString;
 
     private final BufferedReader _bufferedIn;
-    private final HttpRequestParserHelper _parserHelper;
+    private final HttpHeaderLinesParser _parserHelper;
 
     public HttpRequestParser(InputStream in) {
         _bufferedIn = new BufferedReader(new InputStreamReader(in));
-        _parserHelper = new HttpRequestParserHelper();
+        _parserHelper = new HttpHeaderLinesParser();
     }
 
     // should be parsed as a map, but i don't need it now

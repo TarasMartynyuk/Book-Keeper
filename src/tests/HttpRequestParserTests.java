@@ -6,18 +6,21 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class HttpRequestParserTests {
 
     static final String CONTENT = "note=LONGONELONGONELONGONELONGOE";
     static final int CONTENT_LENGTH = CONTENT.length();
     static final String HEADER_END = "HEADER_END";
+    static final String COOKIE = "Idea-4886331b=53119ac8-b5ca-4982-942e-92dec07594ea; JSESSIONID=F534F188FEC14180E540B5E25D5D7E48";
 
     static final String POST_STRING =
             "POST /servlet/hello HTTP/1.1\r\n" +
             "Host: localhost:8888\r\n" +
             "Content-Length: " + CONTENT_LENGTH + "\r\n" +
             "Connection: keep-alive" + HEADER_END + "\r\n" +
+            "Cookie: " + COOKIE +
             "\r\n" +
             CONTENT;
 
@@ -45,20 +48,13 @@ public class HttpRequestParserTests {
         Assert.assertEquals(body, CONTENT);
     }
 
-    InputStream createPostRequestStream() {
-        return new ByteArrayInputStream(POST_STRING.getBytes());
+    @Test
+    public void GetCookie_ReturnsValueOfCookieHeader() throws IOException {
+        _testInstance.readAndParseHeaders();
+        Assert.assertEquals(_testInstance.getCookie(), COOKIE);
     }
 
-    public static void writeAll(InputStream in) throws IOException {
-        var twoBytes = new byte[2];
-        while (true) {
-
-            if(in.read(twoBytes, 0, twoBytes.length) == -1) {
-                System.out.println("EOF!");
-                break;
-            }
-
-            System.out.print(new String(twoBytes, "UTF-8"));
-        }
+    InputStream createPostRequestStream() {
+        return new ByteArrayInputStream(POST_STRING.getBytes());
     }
 }

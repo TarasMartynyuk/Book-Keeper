@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 // TODO: parsed everything in one run
-public class HttpRequestParserHelper {
+public class HttpHeaderLinesParser {
+    private static final String COOKIE_HEADER_NAME = "Cookie";
 
-    public HttpRequestParserHelper() {
+    public HttpHeaderLinesParser() {
 //        _uri
 
 
@@ -50,8 +51,18 @@ public class HttpRequestParserHelper {
     }
 
     public boolean isCookiesString(String headerLine) {
-        return false;
+        var headerName = parseHeaderName(headerLine);
+
+        if(headerName == null) {
+            throw new IllegalArgumentException("invalid header line");
+        }
+
+        return headerName.equals(COOKIE_HEADER_NAME);
     }
+
+//    public String getHeaderValue(String headerString) {
+//
+//    }
 
     /**
      * @return 0 if no content length header provided, else header value
@@ -98,5 +109,18 @@ public class HttpRequestParserHelper {
         }
 
         return body;
+    }
+
+
+    /**
+     * @return header name if valid header, else null
+     */
+    private static String parseHeaderName(String header) {
+        int separatorIndex = header.indexOf(": ");
+
+        if(separatorIndex <= 0) {
+            return null;
+        }
+        return header.substring(0, separatorIndex);
     }
 }

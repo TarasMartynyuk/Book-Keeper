@@ -1,13 +1,13 @@
 package tests;
 
-import http.server.request.HttpRequestParserHelper;
+import http.server.request.HttpHeaderLinesParser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 
-public class HttpRequestParserHelperTests {
+public class HttpHeaderLinesParserTests {
     //region body mocks
 
     static final String key1 = "key1";
@@ -24,13 +24,22 @@ public class HttpRequestParserHelperTests {
     static final String EMPTY_VALUE_BODY = VALID_BODY_SINGLE_PARAM + "&" + key1 + "=";
     //endregion
 
-    HttpRequestParserHelper _testInstance;
+    static final String HEADER_VALUE = "value";
+    static final String VALID_HEADER = "header: " + HEADER_VALUE;
+    static final String INVALID_HEADER = "invalid semicolon should be here with whitespace" + HEADER_VALUE;
+
+    static final String COOKIE_HEADER = "Cookie";
+    static final String VALID_COOKIE_HEADER = COOKIE_HEADER + ": val";
+    static final String NOT_COOKIE_HEADER = "notcookie: val";
+
+    HttpHeaderLinesParser _testInstance;
 
     @Before
     public void setup() throws IOException {
-        _testInstance = new HttpRequestParserHelper();
+        _testInstance = new HttpHeaderLinesParser();
     }
 
+    //region body
     @Test
     public void ParseBody_IfSingleParameter_ReturnMapHasSingleEntry() {
         var body = _testInstance.parseBody(VALID_BODY_SINGLE_PARAM);
@@ -62,5 +71,31 @@ public class HttpRequestParserHelperTests {
     @Test(expected = IllegalArgumentException.class)
     public void ParseBody_ThrowsInvalidArgument_IfValueIsEmpty() {
         _testInstance.parseBody(EMPTY_VALUE_BODY);
+    }
+    //endregion
+
+
+    @Test
+    public void IsCookie_ReturnsTrueForCookieHeader() {
+        Assert.assertTrue(_testInstance.isCookiesString(VALID_COOKIE_HEADER));
+    }
+
+    @Test
+    public void IsCookie_ReturnsFalse_ForNonCookieHeader() {
+        Assert.assertFalse(_testInstance.isCookiesString(NOT_COOKIE_HEADER));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void IsCookie_Throws_IfNoSemicolonAndWhitespace() {
+        _testInstance.isCookiesString(INVALID_HEADER);
+    }
+
+    @Test
+    public void ParseHeaderValue_ReturnsHeaderValue_IfValidHeader() {
+//        Assert.assertEquals(-_testInstance.parse);
+    }
+
+    @Test
+    public void ParseHeaderValue_Throws_IfNoSemicolonAndWhitespace() {
     }
 }
