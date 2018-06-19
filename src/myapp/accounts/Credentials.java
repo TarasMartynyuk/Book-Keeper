@@ -4,6 +4,11 @@ public class Credentials {
     String _login;
     String _password;
 
+    public Credentials(String login, String password) {
+        _login = login;
+        _password = password;
+    }
+
     public String getLogin() {
         return _login;
     }
