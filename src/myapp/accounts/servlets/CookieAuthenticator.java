@@ -2,10 +2,10 @@ package myapp.accounts.servlets;
 
 import myapp.accounts.AccountsCollectionWrapper;
 import myapp.accounts.Credentials;
-import myapp.books.BooksContainer;
 
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public class CookieAuthenticator {
     public static CookieAuthenticator getInstance()  {
@@ -16,17 +16,14 @@ public class CookieAuthenticator {
     }
     private static CookieAuthenticator _instance;
 
-    private final HashSet<String> givenCookies;
+    private final HashSet<String> _givenCookies;
 
     private CookieAuthenticator() {
-        givenCookies = new HashSet<String>();
+        _givenCookies = new HashSet<String>();
     }
 
-    /**
-     * does this cookie mark an authenticated user?
-     */
-    public boolean isCookieAuthenticated(String cookie) {
-        return givenCookies.contains(cookie);
+    public boolean containsAuthenticationCookie(List<String> cookies) {
+        return cookies.stream().anyMatch(this::isCookieAuthenticated);
     }
 
     /**
@@ -40,8 +37,15 @@ public class CookieAuthenticator {
         }
 
         var cookie = generateCookie(credentials);
-        givenCookies.add(cookie);
+        _givenCookies.add(cookie);
         return cookie;
+    }
+
+    /**
+     * does this cookie mark an authenticated user?
+     */
+    private boolean isCookieAuthenticated(String cookie) {
+        return _givenCookies.contains(cookie);
     }
 
     private String generateCookie(Credentials credentials) {

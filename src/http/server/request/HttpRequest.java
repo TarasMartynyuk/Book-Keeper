@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+// i didn't take time to think about Req/Res interfaces and Http concrete classes, so i'll just
+// put cookies functionality to concrete class and cast for now
 public class HttpRequest implements Request {
     //region getters
     @Override
@@ -77,6 +79,7 @@ public class HttpRequest implements Request {
         _method = parser.getMethod();
         _contentLength = parser.getContentLength();
         _cookies = parser.getCookies();
+        assert _cookies != null;
 
         _headers = parser.getHeaderString();
     }

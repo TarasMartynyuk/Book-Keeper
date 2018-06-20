@@ -1,13 +1,17 @@
 package myapp.books.servlets;
 
 import http.server.Method;
+import http.server.request.HttpRequest;
 import http.server.request.Request;
 import http.server.response.Response;
 import http.server.servlet.AbstractServlet;
+import myapp.accounts.servlets.CookieAuthenticator;
+import myapp.servlets.NotAuthenticatedResponseWriter;
 import myapp.servlets.ResponseBuilder;
 import myapp.books.Book;
 import myapp.books.BooksContainer;
 import myapp.servlets.MissingParameterException;
+import myapp.servlets.WrongMethodException;
 
 import java.io.IOException;
 
@@ -16,9 +20,15 @@ public class AddBookServlet extends AbstractServlet {
     public void service(Request req, Response res) throws IOException, MissingParameterException {
 
         if(req.getMethod() != Method.POST) {
-            throw new IllegalArgumentException("AddBookServlet got a request with method: " + req.getMethod() +
-                    "the method must be Post");
+            throw new WrongMethodException(
+                    "AddBookServlet", req.getMethod(), Method.POST);
         }
+
+        if(! hasAuthCookie(req)) {
+            new NotAuthenticatedResponseWriter().writeNotAuthenticated(res);
+            return;
+        }
+
         try {
             var book = parseBookFromBody(req);
             BooksContainer.getInstance().addBook(book);
@@ -26,8 +36,7 @@ public class AddBookServlet extends AbstractServlet {
             res.sendStaticResource("/index.html");
 
         } catch (NumberFormatException ne) {
-            var resBuilder = new ResponseBuilder(res);
-            resBuilder.writeError(ne.toString());
+            new ResponseBuilder(res).writeError(ne.toString());
         }
     }
 
@@ -39,5 +48,11 @@ public class AddBookServlet extends AbstractServlet {
 
         return new Book(name, author,
                 language, Integer.parseInt(year));
+    }
+
+    static boolean hasAuthCookie(Request req) {
+        return CookieAuthenticator.getInstance().
+                containsAuthenticationCookie(
+                        ((HttpRequest) req).getCookies());
     }
 }
