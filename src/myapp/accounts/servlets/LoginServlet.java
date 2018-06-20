@@ -33,14 +33,12 @@ public class LoginServlet extends AbstractServlet {
                 giveAuthenticationCookie(
                         new Credentials(login, password));
 
-        var filename = authenticationCookie == null ?
-                "/login.html" : "/index.html";
-
-        var page = WebRootPageReader.getPage(filename);
-        var resBuilder = new ResponseBuilder(res);
-
-        var headers = Arrays.asList("Set-Cookie: " + authenticationCookie);
-
-        resBuilder.writeOkResponse(page, "text/html", headers);
+        if(authenticationCookie != null) {
+            var page = WebRootPageReader.getPage("/index.html");
+            var headers = Arrays.asList("Set-Cookie: " + authenticationCookie);
+            new ResponseBuilder(res).writeOkResponse(page, "text/html", headers);
+        } else {
+            res.sendStaticResource("/login.html");
+        }
     }
 }
