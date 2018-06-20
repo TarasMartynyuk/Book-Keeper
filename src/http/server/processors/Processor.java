@@ -8,12 +8,14 @@ package http.server.processors;
 import http.server.request.Request;
 import http.server.response.Response;
 
+import java.io.IOException;
+
 /**
  *
  * @author andrii
  */
 public interface Processor {
 
-    void process(Request request, Response response);
+    void process(Request request, Response response) throws IOException;
     
 }

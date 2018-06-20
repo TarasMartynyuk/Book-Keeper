@@ -1,6 +1,5 @@
 package myapp.books.servlets;
 
-import http.server.Constants;
 import http.server.Method;
 import http.server.request.Request;
 import http.server.response.Response;
@@ -11,14 +10,13 @@ import myapp.servlets.NotAuthenticatedResponseWriter;
 import myapp.servlets.ResponseBuilder;
 import myapp.books.Book;
 import myapp.books.BooksContainer;
-import myapp.servlets.MissingParameterException;
 import myapp.servlets.WrongMethodException;
 
 import java.io.IOException;
 
 public class AddBookServlet extends AbstractServlet {
 
-    public void service(Request req, Response res) throws IOException, MissingParameterException {
+    public void service(Request req, Response res) throws IOException {
 
         if(req.getMethod() != Method.POST) {
             throw new WrongMethodException(

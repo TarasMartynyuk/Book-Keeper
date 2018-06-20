@@ -11,7 +11,6 @@ import java.util.Map;
  * assumes it is the only one reading from InputStream
  */
 public class HttpRequestParser {
-
     //region getters
 
     public String getUri() {
