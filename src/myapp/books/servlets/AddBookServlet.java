@@ -5,7 +5,7 @@ import http.server.request.Request;
 import http.server.response.Response;
 import http.server.servlet.AbstractServlet;
 import myapp.AppConstants;
-import myapp.accounts.servlets.CookieAuthenticator;
+import myapp.accounts.CookieAuthenticator;
 import myapp.servlets.NotAuthenticatedResponseWriter;
 import myapp.servlets.ResponseBuilder;
 import myapp.books.Book;

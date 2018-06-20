@@ -1,11 +1,8 @@
-package myapp.accounts.servlets;
+package myapp.accounts;
 
 import http.server.request.HttpRequest;
 import http.server.request.Request;
-import myapp.accounts.AccountsCollectionWrapper;
-import myapp.accounts.Credentials;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -41,7 +38,7 @@ public class CookieAuthenticator {
      * else returns null
      */
     public String giveAuthenticationCookie(Credentials credentials) {
-        if(!AccountsCollectionWrapper.getInstance().credentialsValid(credentials)) {
+        if(! AccountsCollectionWrapper.getInstance().credentialsValid(credentials)) {
             return null;
         }
 

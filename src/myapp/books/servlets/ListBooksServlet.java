@@ -1,15 +1,13 @@
 package myapp.books.servlets;
 import http.server.Method;
-import http.server.request.HttpRequest;
 import http.server.request.Request;
 import http.server.response.Response;
 import http.server.servlet.AbstractServlet;
 import myapp.AppConstants;
-import myapp.accounts.servlets.CookieAuthenticator;
+import myapp.accounts.CookieAuthenticator;
 import myapp.servlets.NotAuthenticatedResponseWriter;
 import myapp.servlets.ResponseBuilder;
 import myapp.books.BooksContainer;
-import myapp.servlets.MissingParameterException;
 import myapp.servlets.WrongMethodException;
 
 import java.io.IOException;
