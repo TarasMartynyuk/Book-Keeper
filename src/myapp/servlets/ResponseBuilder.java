@@ -35,9 +35,10 @@ public class ResponseBuilder {
         _out.flush();
     }
 
-    public void writeError(String errorMessage) {
+    public void writeError(String errorMessage, String contentType) {
         writeOkHeader();
-        writeContentHeaders(errorMessage.length(), "text/plain");
+        writeContentHeaders(errorMessage.length(), contentType);
+        _out.write("\r\n");
         _out.write(errorMessage);
         writeConnectionClosed();
         _out.flush();

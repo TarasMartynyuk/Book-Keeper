@@ -1,10 +1,11 @@
 package myapp.books.servlets;
 
+import http.server.Constants;
 import http.server.Method;
-import http.server.request.HttpRequest;
 import http.server.request.Request;
 import http.server.response.Response;
 import http.server.servlet.AbstractServlet;
+import myapp.AppConstants;
 import myapp.accounts.servlets.CookieAuthenticator;
 import myapp.servlets.NotAuthenticatedResponseWriter;
 import myapp.servlets.ResponseBuilder;
@@ -24,7 +25,7 @@ public class AddBookServlet extends AbstractServlet {
                     "AddBookServlet", req.getMethod(), Method.POST);
         }
 
-        if(! hasAuthCookie(req)) {
+        if(! CookieAuthenticator.getInstance().containsAuthenticationCookie(req)) {
             new NotAuthenticatedResponseWriter().writeNotAuthenticated(res);
             return;
         }
@@ -36,7 +37,7 @@ public class AddBookServlet extends AbstractServlet {
             res.sendStaticResource("/index.html");
 
         } catch (NumberFormatException ne) {
-            new ResponseBuilder(res).writeError(ne.toString());
+            new ResponseBuilder(res).writeError(ne.toString(), AppConstants.TYPE_PLAIN_TEXT);
         }
     }
 
@@ -48,11 +49,5 @@ public class AddBookServlet extends AbstractServlet {
 
         return new Book(name, author,
                 language, Integer.parseInt(year));
-    }
-
-    static boolean hasAuthCookie(Request req) {
-        return CookieAuthenticator.getInstance().
-                containsAuthenticationCookie(
-                        ((HttpRequest) req).getCookies());
     }
 }

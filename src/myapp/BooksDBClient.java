@@ -20,11 +20,11 @@ public class BooksDBClient {
 
     private BooksDBClient() {
         var credential = MongoCredential.createCredential(USERNAME,
-                Constants.BOOK_KEEPER_DB_NAME,
+                AppConstants.BOOK_KEEPER_DB_NAME,
                 PASSWORD.toCharArray());
         _client = new MongoClient(new ServerAddress("localhost", 27017), Arrays.asList(credential));
 
-        _booksDb = _client.getDB(Constants.BOOK_KEEPER_DB_NAME);
+        _booksDb = _client.getDB(AppConstants.BOOK_KEEPER_DB_NAME);
     }
 
     public DBCollection getCollection(String booksCollName) {

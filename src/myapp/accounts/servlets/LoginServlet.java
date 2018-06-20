@@ -4,6 +4,7 @@ import http.server.Method;
 import http.server.request.Request;
 import http.server.response.Response;
 import http.server.servlet.AbstractServlet;
+import myapp.AppConstants;
 import myapp.accounts.Credentials;
 import myapp.servlets.MissingParameterException;
 import myapp.servlets.ResponseBuilder;
@@ -51,6 +52,6 @@ public class LoginServlet extends AbstractServlet {
         new ResponseBuilder(res).writeOkResponse(
                 "Wrong login or password" +
                 page,
-                "text/html");
+                AppConstants.TYPE_HTML);
     }
 }

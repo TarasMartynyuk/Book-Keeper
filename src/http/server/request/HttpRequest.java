@@ -79,7 +79,6 @@ public class HttpRequest implements Request {
         _method = parser.getMethod();
         _contentLength = parser.getContentLength();
         _cookies = parser.getCookies();
-        assert _cookies != null;
 
         _headers = parser.getHeaderString();
     }

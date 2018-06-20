@@ -2,11 +2,8 @@ package myapp.books;
 
 import com.mongodb.*;
 import myapp.BooksDBClient;
-import myapp.Constants;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BooksCollectionWrapper {
 

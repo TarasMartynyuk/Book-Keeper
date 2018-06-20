@@ -4,6 +4,7 @@ import http.server.request.HttpRequest;
 import http.server.request.Request;
 import http.server.response.Response;
 import http.server.servlet.AbstractServlet;
+import myapp.AppConstants;
 import myapp.accounts.servlets.CookieAuthenticator;
 import myapp.servlets.NotAuthenticatedResponseWriter;
 import myapp.servlets.ResponseBuilder;
@@ -21,7 +22,7 @@ public class ListBooksServlet extends AbstractServlet {
                     "ListBooksServlet", req.getMethod(), Method.GET);
         }
 
-        if(! hasAuthCookie(req)) {
+        if(! CookieAuthenticator.getInstance().containsAuthenticationCookie(req)) {
             new NotAuthenticatedResponseWriter().writeNotAuthenticated(res);
             return;
         }
@@ -30,12 +31,7 @@ public class ListBooksServlet extends AbstractServlet {
         var resBuilder = new ResponseBuilder(res);
 
         var books = BooksContainer.getInstance().getBooks();
-        resBuilder.writeOkResponse(htmlBuilder.buildBookListPage(books), "text/html");
+        resBuilder.writeOkResponse(htmlBuilder.buildBookListPage(books), AppConstants.TYPE_HTML);
     }
 
-    static boolean hasAuthCookie(Request req) {
-        return CookieAuthenticator.getInstance().
-                containsAuthenticationCookie(
-                        ((HttpRequest) req).getCookies());
-    }
 }

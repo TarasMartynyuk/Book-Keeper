@@ -1,5 +1,7 @@
 package myapp.accounts.servlets;
 
+import http.server.request.HttpRequest;
+import http.server.request.Request;
 import myapp.accounts.AccountsCollectionWrapper;
 import myapp.accounts.Credentials;
 
@@ -19,7 +21,14 @@ public class CookieAuthenticator {
     private final HashSet<String> _givenCookies;
 
     private CookieAuthenticator() {
-        _givenCookies = new HashSet<String>();
+        _givenCookies = new HashSet<>();
+    }
+
+    public boolean containsAuthenticationCookie(Request req) {
+        var httpReq = ((HttpRequest) req);
+
+        return httpReq.getCookies() != null &&
+                containsAuthenticationCookie(httpReq.getCookies());
     }
 
     public boolean containsAuthenticationCookie(List<String> cookies) {
