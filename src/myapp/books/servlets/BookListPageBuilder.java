@@ -16,15 +16,16 @@ public class BookListPageBuilder {
 
     public String buildBookListPage(Iterable<Book> books) throws IOException {
         var builder = new StringBuilder();
+        var pageReader = new WebRootPageReader();
 
-        builder.append(WebRootPageReader.getPage(HEADER_FILENAME));
+        builder.append(pageReader.getPage(HEADER_FILENAME));
 
         for(var book : books) {
             builder.append(buildBookListParagraph(book));
             builder.append("<br><br>");
         }
 
-        builder.append(WebRootPageReader.getPage(FOOTER_FILENAME));
+        builder.append(pageReader.getPage(FOOTER_FILENAME));
 
         return builder.toString();
     }

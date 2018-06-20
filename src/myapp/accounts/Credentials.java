@@ -1,8 +1,8 @@
 package myapp.accounts;
 
 public class Credentials {
-    String _login;
-    String _password;
+    private String _login;
+    private String _password;
 
     public Credentials(String login, String password) {
         _login = login;

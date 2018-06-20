@@ -1,5 +1,6 @@
 package myapp.accounts;
 
+import java.util.ArrayList;
 
 public class AccountsCollectionWrapper {
     public static AccountsCollectionWrapper getInstance()  {
@@ -10,11 +11,17 @@ public class AccountsCollectionWrapper {
     }
     private static AccountsCollectionWrapper _instance;
 
-    public boolean credentialsValid(Credentials credentials) {
-        return true;
+    private ArrayList<Credentials> _credentials;
+
+    private AccountsCollectionWrapper() {
+        _credentials = new ArrayList<>();
+        _credentials.add(new Credentials("login", "pass"));
     }
 
-    private void createUser() {
-
+    public boolean credentialsValid(Credentials credentials) {
+        return _credentials.stream().
+                anyMatch(knownCred ->
+                        knownCred.getLogin().equals(credentials.getLogin()) &&
+                        knownCred.getPassword().equals(credentials.getPassword()));
     }
 }
